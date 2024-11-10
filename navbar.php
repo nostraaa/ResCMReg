@@ -8,9 +8,13 @@ function renderMenu() {
         "Student Main Record" => [
             "icon" => "bi-file-earmark-text",
             "sub-menu" => [
-                "Student Schedule" => "student-schedule.php",
-                "Modification of Data" => "modification.php",
-                "Residency Status" => "/rescmreg/layouts/coursemaintenance/residency-status.php"
+                "Main Record" => "/rescmreg/layouts/StudentMainRecord/Main Record/main-record.php",
+                "Modification of Data" => "/rescmreg/layouts/StudentMainRecord/Modification/modification.php",
+                "Academic Records from other School" => "/rescmreg/layouts/StudentMainRecord/Academic_From_Other_School/acad-records-from-other-school.php",
+                "Credential Records" => "/rescmreg/layouts/StudentMainRecord/Credential Records/credentials.php",
+                "Grade Status" => "/rescmreg/layouts/StudentMainRecord/Grade_Status/gradeStatus.php",
+                "Student Schedule" => "/rescmreg/layouts/StudentMainRecord/Student_Schedule/studentSched.php",
+                "Residency Status" => "/rescmreg/layouts/StudentMainRecord/Residency Status/residency-status.php"
             ],
         ],
         "Course Maintenance" => [
@@ -20,32 +24,53 @@ function renderMenu() {
         "Curriculum Maintenance" => [
             "icon" => "bi-book",  
             "sub-menu" => [
-                "Program" => "program.php"
+                "Course Program" => "/rescmreg/layouts/Curriculum Maintenance/courseProgram.php",
+                "Colleges" => "/rescmreg/layouts/Curriculum Maintenance/Colleges.php",
+                "Departments With College" => "/rescmreg/layouts/Curriculum Maintenance/DepartmentWithColleges.php",
+                "Department without College" => "/rescmreg/layouts/Curriculum Maintenance/DepartmentWithoutColleges.php",
+                "Courses" => "/rescmreg/layouts/Curriculum Maintenance/Courses.php",
+                "Equivalent Subject for Advising " => "/rescmreg/layouts/Curriculum Maintenance/EquivalentSubject.php",
+                "Subject Without Credit Unit" => "/rescmreg/layouts/Curriculum Maintenance/SubjectWithoutCredit.php",
+                "Course Curriculum" => "/rescmreg/layouts/Curriculum Maintenance/CoursesCurriculum.php",
+                "List of Course Offering Subject" => "/rescmreg/layouts/Curriculum Maintenance/List-of-course-offering-subject.php",
+                "Copy/Delete Curriculum" => "/rescmreg/layouts/Curriculum Maintenance/Copy-delete.php",
             ]
         ],
         "Grades Management" => [
             "icon" => "bi-pencil",  
             "sub-menu" => [
-                "Rectification of Grades" => "/rescmreg/layouts/gradesmanagement/RectificationOfGrades.php",
-                "Unlocking of Grades" => "unlocking-of-grades.php"
+                "Encoding of Grades - Status Report" => "/rescmreg/layouts/Grades Management/EncodingOfGrades.php",
+                "Final Report of Grade" => "/rescmreg/layouts/Grades Management/FinalReportOfGrades.php",
+                "Rectification of Grades" => "/rescmreg/layouts/Grades Management/RectificationofGrades.php",
+                "Completion of Grades" => "/rescmreg/layouts/Grades Management/CompletionOfGrades.php",
+                "Unlocking of Grades" => "/rescmreg/layouts/Grades Management/UnlockingOfGrades.php",
             ]
         ],
         "Reports" => [
             "icon" => "bi-file-earmark",  
             "sub-menu" => [
-                "List of Graduating" => "list-of-graduating.php"
+                "Official Transcript of Records" => "/rescmreg/layouts/Reports/officialTOR.php",
+                "Official Transcript of Records of Candidate for Graduation" => "/rescmreg/layouts/Reports/officialTORofCFG.php",
+                "Candidate for Graduation" => "/rescmreg/layouts/Reports/candidatesforgrad.php",
+                "Certification of Grades" => "/rescmreg/layouts/Reports/cog.php",
+                "Evaluation of Grades" => "/rescmreg/layouts/Reports/evalOfGrades.php",
+                
             ]
-        ]
+            ],
+        "Official Dropping of Subject" => [
+            "icon" => "bi-journal", 
+            "link" => "/rescmreg/layouts/Official Dropping/OfficialDropping.php",
+        ],
     ];
 
     foreach ($menu as $key => $value) {
         if (isset($value['link'])) {
-            echo "<li><a href='#' onclick='loadContent(\"{$value['link']}\", this, [\"$key\"])'><i class='bi {$value['icon']}'></i> <span class='menu-text'>$key</span></a></li>";
+            echo "<li><a href='#' onclick='loadContent(\"{$value['link']}\", this, [\"$key\"])' title='$key' data-tooltip='$key'><i class='bi {$value['icon']}'></i> <span class='menu-text'>$key</span></a></li>";
         } elseif (isset($value['sub-menu'])) {
-            echo "<li class='has-sub-menu'><a href='#' class='menu-item' onclick='toggleSubMenu(this.parentNode)'><i class='bi {$value['icon']}'></i> <span class='menu-text'>$key</span> <i class='bx bx-chevron-down'></i></a>";
+            echo "<li class='has-sub-menu'><a href='#' class='menu-item' onclick='toggleSubMenu(this.parentNode)' title='$key' data-tooltip='$key'><i class='bi {$value['icon']}'></i> <span class='menu-text'>$key</span> <i class='bx bx-chevron-down'></i></a>";
             echo "<ul class='sub-menu' style='display: none;'>";
             foreach ($value['sub-menu'] as $subKey => $subValue) {
-                echo "<li><a href='#' onclick='loadContent(\"{$subValue}\", this, handleMenuClick(\"$key\", \"$subKey\"))'>$subKey</a></li>";
+                echo "<li><a href='#' onclick='loadContent(\"{$subValue}\", this, handleMenuClick(\"$key\", \"$subKey\"))' title='$subKey' data-tooltip='$subKey'>$subKey</a></li>";
             }
             echo "</ul></li>";
         }
@@ -68,24 +93,46 @@ function renderMenu() {
     <link rel="stylesheet" href="navbar.css">
 
     <style>
+        body  {
+            overflow: hidden;
+            background-color: var(--background-color);
+        }
         .sidebar {
-            position: fixed;
-            width: 250px;
-            height: 100vh;
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-            overflow-y: auto; /* Enable vertical scrolling */
-            z-index: 1000; /* Ensure it stays above other content */
+        position: fixed;
+        width: 250px;
+        height: 90vh;
+        background-color: #ffffff;
+        transition: all 0.3s ease;
+        overflow-y: scroll; /* Enable scrolling */
+        -ms-overflow-style: none; /* Hide scrollbar in Internet Explorer and Edge */
+        scrollbar-width: none; /* Hide scrollbar in Firefox */
+        }
+        .sidebar::-webkit-scrollbar {
+            display: none; /* Hide scrollbar in Chrome, Safari, and newer versions of Edge */
         }
         .sidebar.collapsed {
-            width: 80px;
+            width: 60px;
+            background-color: whitesmoke;
+        }
+            /* Collapse Toggle Positioning */
+        .sidebar-header {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #ffffff;
+            padding: 10px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow effect */
+        }
+
+        .collapse-icon {
+            cursor: pointer;
         }
         .main-content {
             margin-left: 250px;
             transition: all 0.3s ease;
-            padding: 20px;
-            overflow-y: auto; /* Enable vertical scrolling */
-            height: 100vh; /* Make sure main content takes full height */
+            padding: 10px;
+            overflow-y: auto; /* Allow vertical scrolling in main content */
+            height: 100vh;
         }
         .main-content.collapsed {
             margin-left: 80px;
@@ -106,6 +153,23 @@ function renderMenu() {
         /* Hide scrollbar for Firefox */
         #contentFrame {
             scrollbar-width: none; /* Hides the scrollbar */
+        }
+        .iframe-container {
+            width: 100%;
+            height: 100%; /* Ensure the container fills available height */
+            overflow: hidden; /* Hide scrollbar */
+        }
+
+        #iframe-contentFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            overflow: auto; /* Enable scrolling */
+            scrollbar-width: none; /* Firefox: hide scrollbar */
+        }
+
+        #iframe-contentFrame::-webkit-scrollbar {
+            display: none; /* Chrome, Safari: hide scrollbar */
         }
 
         /* Profile Section */
@@ -142,7 +206,7 @@ function renderMenu() {
         /* Sub-menu styling */
         .sub-menu {
             list-style-type: none;
-            padding-left: 20px;
+            padding-left: 50px;
             display: none;
         }
 
@@ -171,35 +235,6 @@ function renderMenu() {
             background-color: #e0e0e0;
             border-radius: 5px;
         }
-        .breadcrumbs {
-            position: fixed; /* Keeps the breadcrumbs fixed on the top */
-            width: 92%; /* Full width */
-            font-size: 14px;
-            margin: 0; /* Removes margin */
-            padding: 10px; /* Adds padding */
-            background-color: #f8f9fa; /* Background color */
-            border: 1px solid #dee2e6; /* Border to match existing style */
-            border-radius: 7px; /* Remove border radius for a more streamlined look */
-        }
-
-        .breadcrumbs a {
-            text-decoration: none;
-            color: #17416A; 
-        }
-
-        .breadcrumbs a:hover {
-            color: white;
-            background-color: #17416A;
-            border-radius: 5px;
-            padding: 5px;
-        }
-
-        .breadcrumb .active {
-            font-weight: bold; 
-            color: #17416A; 
-        }
-        
-
     </style>
 </head>
 <body>
@@ -225,9 +260,10 @@ function renderMenu() {
     </div>
 
     <div id="mainContent" class="main-content">
-        <div id="breadcrumbs" class="breadcrumbs"></div>
-        <iframe id="contentFrame" src=""></iframe> <!-- Frame for dynamic content -->
-    </div>
+        
+        <div class="iframe-container">
+    <iframe id="contentFrame" src=""></iframe> <!-- Frame for dynamic content -->
+</div>
 
     <script>
         const breadcrumbContainer = document.getElementById('breadcrumbs');
@@ -257,6 +293,9 @@ function renderMenu() {
             const contentFrame = document.getElementById('contentFrame');
             contentFrame.src = page;
 
+            // Save active menu in localStorage
+            localStorage.setItem('activeMenu', JSON.stringify(breadcrumbPath));
+
             // Update active menu item
             const menuItems = document.querySelectorAll('.nav_list li a');
             menuItems.forEach(item => item.classList.remove('active'));
@@ -266,6 +305,7 @@ function renderMenu() {
             breadcrumbTrail = breadcrumbPath; // Store the current breadcrumb path
             updateBreadcrumbs(breadcrumbTrail);
         }
+
 
         function handleMenuClick(menuName, subMenuName = '') {
             const breadcrumbPath = [menuName];
@@ -287,11 +327,24 @@ function renderMenu() {
         }
 
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const mainContent = document.getElementById('mainContent');
-            sidebar.classList.toggle('collapsed');
-            mainContent.classList.toggle('collapsed');
-        }
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    sidebar.classList.toggle('collapsed');
+    mainContent.classList.toggle('collapsed');
+
+    // Apply tooltips when sidebar is collapsed
+    const navLinks = document.querySelectorAll('.nav_list li a');
+    if (sidebar.classList.contains('collapsed')) {
+        navLinks.forEach(link => {
+            link.setAttribute('data-tooltip', link.getAttribute('title'));
+        });
+    } else {
+        navLinks.forEach(link => {
+            link.removeAttribute('data-tooltip');
+        });
+    }
+}
+
     </script>
 </body>
 </html>
